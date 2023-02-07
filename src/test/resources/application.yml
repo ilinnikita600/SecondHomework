@@ -1,2 +1,7 @@
 application:
-  testAnswersPath: testAnswers.csv
+    questions:
+        correctAnswersPath: correctAnswers.csv
+        questionsPath: questions.csv
+    minCorrectAnswers: 2
+test:
+    testAnswersPath: testAnswers.csv
