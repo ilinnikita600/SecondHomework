@@ -1,0 +1,4 @@
+application:
+    correctAnswersPath: correctAnswers.csv
+    questionsPath: questions.csv
+    minCorrectAnswers: 2
