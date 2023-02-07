@@ -18,7 +18,7 @@ public class Result {
         for (Map.Entry<Question, String> questionRes; questionsResultIterator.hasNext(); ) {
             questionRes = questionsResultIterator.next();
             Question question = questionRes.getKey();
-            String answer = questionRes.getValue();
+            String answer = questionRes.getValue().strip();
             if (question.getCorrectAnswer() == null || question.getCorrectAnswer().equals(answer)) {
                 correctAnswers += 1;
             }
