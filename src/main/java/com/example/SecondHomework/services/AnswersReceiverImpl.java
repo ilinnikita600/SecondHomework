@@ -13,12 +13,12 @@ import java.util.Iterator;
 
 public class AnswersReceiverImpl implements AnswersReceiver {
     @Getter
-    private final ArrayList<Question> questionsAsked;
+    private ArrayList<Question> questionsAsked;
     @Getter
-    private final ArrayList<String> answers;
-    private final BufferedReader bufferedReader;
-    private final BufferedWriter bufferedWriter;
-    private final Iterator<Question> questionsIterator;
+    private ArrayList<String> answers;
+    private BufferedReader bufferedReader;
+    private BufferedWriter bufferedWriter;
+    private Iterator<Question> questionsIterator;
 
     public AnswersReceiverImpl(Iterator<Question> questionsIterator, InputStream is, OutputStream os) {
         bufferedReader = new BufferedReader(new InputStreamReader(is));
@@ -27,6 +27,7 @@ public class AnswersReceiverImpl implements AnswersReceiver {
         this.questionsAsked = new ArrayList<>();
         this.answers = new ArrayList<>();
     }
+    private AnswersReceiverImpl() {}
     @Override
     @Loggable
     public boolean askQuestion() throws IOException {
