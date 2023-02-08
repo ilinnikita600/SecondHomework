@@ -1,6 +1,7 @@
 package com.example.SecondHomework.services;
 
 import com.example.SecondHomework.QuestionsProps;
+import com.example.SecondHomework.annotations.Loggable;
 import com.example.SecondHomework.model.Question;
 
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class QuestionsReceiverFromFile implements QuestionsReceiver {
 
         return question;
     }
+    @Loggable
     public Iterator<Question> getQuestions() throws IOException {
         return readQuestions().iterator();
     }

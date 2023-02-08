@@ -1,5 +1,6 @@
 package com.example.SecondHomework.services;
 
+import com.example.SecondHomework.annotations.Loggable;
 import com.example.SecondHomework.model.Question;
 import com.example.SecondHomework.model.Result;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Component
 public class ResultBuilderImpl implements ResultBuilder {
-
+    @Loggable
     @Override
     public Result getResult(List<Question> questions, List<String> answers) throws InvalidPropertiesFormatException {
         if (questions.size() != answers.size()) {

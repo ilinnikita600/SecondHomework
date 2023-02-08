@@ -1,6 +1,7 @@
 package com.example.SecondHomework.services;
 
 
+import com.example.SecondHomework.annotations.Loggable;
 import com.example.SecondHomework.model.Question;
 import com.example.SecondHomework.model.Result;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class AnswersReceiverImpl implements AnswersReceiver {
         this.answers = new ArrayList<>();
     }
     @Override
+    @Loggable
     public boolean askQuestion() throws IOException {
         if (!questionsIterator.hasNext()) return false;
         Question current = questionsIterator.next();
