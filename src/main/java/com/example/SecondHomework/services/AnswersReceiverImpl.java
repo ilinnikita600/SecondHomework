@@ -3,31 +3,39 @@ package com.example.SecondHomework.services;
 
 import com.example.SecondHomework.annotations.Loggable;
 import com.example.SecondHomework.model.Question;
-import com.example.SecondHomework.model.Result;
+
+import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import lombok.Setter;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.InvalidPropertiesFormatException;
+import java.util.Collections;
 import java.util.Iterator;
-
+@Component
+@Scope("prototype")
 public class AnswersReceiverImpl implements AnswersReceiver {
     @Getter
     private ArrayList<Question> questionsAsked;
     @Getter
     private ArrayList<String> answers;
     private BufferedReader bufferedReader;
+
     private BufferedWriter bufferedWriter;
+    @Setter
     private Iterator<Question> questionsIterator;
 
-    public AnswersReceiverImpl(Iterator<Question> questionsIterator, InputStream is, OutputStream os) {
-        bufferedReader = new BufferedReader(new InputStreamReader(is));
-        bufferedWriter = new BufferedWriter(new OutputStreamWriter(os));
-        this.questionsIterator = questionsIterator;
+    @PostConstruct
+    public void init() {
         this.questionsAsked = new ArrayList<>();
         this.answers = new ArrayList<>();
+        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
+        questionsIterator = Collections.emptyIterator();
     }
-    private AnswersReceiverImpl() {}
     @Override
     @Loggable
     public boolean askQuestion() throws IOException {
@@ -47,5 +55,13 @@ public class AnswersReceiverImpl implements AnswersReceiver {
         answers.add(bufferedReader.readLine());
         questionsAsked.add(current);
         return true;
+    }
+
+    public void setInput(InputStream inputStream) {
+        this.bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+    }
+
+    public void setOutput(OutputStream outputStream) {
+        this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
     }
 }

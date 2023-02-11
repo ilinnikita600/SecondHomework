@@ -1,36 +1,38 @@
 package com.example.SecondHomework;
 
 import com.example.SecondHomework.model.Question;
+import com.example.SecondHomework.model.Result;
 import com.example.SecondHomework.services.AnswersReceiver;
 import com.example.SecondHomework.services.AnswersReceiverImpl;
-import jakarta.annotation.Resource;
+import com.example.SecondHomework.services.ResultBuilder;
+
+import jakarta.annotation.PostConstruct;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+
 import java.util.ArrayList;
 
 @SpringBootTest
 public class AnswersReceiverTests {
     private AnswersReceiver answersReceiver;
     private ApplicationTestProps applicationTestProps;
+    private ApplicationContext applicationContext;
+    private ResultBuilder resultBuilder;
     @Autowired
-    AnswersReceiverTests(ApplicationTestProps applicationTestProps) {
+    AnswersReceiverTests(ApplicationTestProps applicationTestProps, ApplicationContext applicationContext, ResultBuilder resultBuilder) {
         this.applicationTestProps = applicationTestProps;
-        initial();
+        this.applicationContext = applicationContext;
+        this.resultBuilder = resultBuilder;
     }
-
+    @PostConstruct
     private void initial() {
         ArrayList<Question> questions = new ArrayList<>();
         Question question = new Question();
@@ -47,19 +49,24 @@ public class AnswersReceiverTests {
 
 
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(applicationTestProps.getTestAnswersPath());
-        answersReceiver = new AnswersReceiverImpl(questions.iterator(), inputStream, System.out);
-    }
+        AnswersReceiverImpl answersReceiverImpl = (AnswersReceiverImpl) applicationContext.getBean(AnswersReceiver.class);
+        answersReceiverImpl.setQuestionsIterator(questions.iterator());
+        answersReceiverImpl.setInput(inputStream);
 
+        answersReceiver = answersReceiverImpl;
+    }
     @Test
     void askQuestionTest() {
-        String res;
+        String message;
         try {
             while(answersReceiver.askQuestion());
-            res = "Successfully";
+            AnswersReceiverImpl ari = (AnswersReceiverImpl) answersReceiver;
+            Result result = resultBuilder.getResult(ari.getQuestionsAsked(), ari.getAnswers());
+            message =  result.getCorrectAnswers() == 2 ? "Successfully" : "Not correct read from file";
         } catch (IOException e) {
-            res = e.getMessage();
+            message = e.getMessage();
         }
 
-        Assertions.assertEquals("Successfully",res, res);
+        Assertions.assertEquals("Successfully",message, message);
     }
 }
