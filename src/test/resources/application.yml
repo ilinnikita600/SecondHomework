@@ -5,3 +5,7 @@ application:
     minCorrectAnswers: 2
 test:
     testAnswersPath: testAnswers.csv
+spring:
+    shell:
+        interactive:
+            enabled: false
